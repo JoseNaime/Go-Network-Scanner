@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"net"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
@@ -15,16 +17,6 @@ type NmapScanResult struct {
 	Details    string
 	MACAddress string
 	DeviceType string
-}
-
-// RunCommand runs a command and returns its output and any errors
-func RunCommand(name string, args ...string) (string, error) {
-	cmd := exec.Command(name, args...)
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &out
-	err := cmd.Run()
-	return out.String(), err
 }
 
 func ScanIpsWithNmap(ips []net.IP, nmapPath string) []NmapScanResult {
@@ -79,4 +71,48 @@ func extractMACAndDeviceType(output string) (string, string) {
 		return matches[1], matches[2]
 	}
 	return "", ""
+}
+
+func CheckNmap() (string, bool) {
+	nmapPath, err := exec.LookPath("nmap")
+	if err != nil {
+		return "", false
+	}
+	return nmapPath, true
+}
+
+func DownloadNmap(binDir string) (string, error) {
+	nmapURL := "https://nmap.org/dist/nmap-7.80.tgz" // Adjust the URL to the appropriate version and platform
+	nmapPath := filepath.Join(binDir, "nmap")
+
+	fmt.Println("Downloading nmap...")
+	cmd := exec.Command("wget", "-O", "nmap.tgz", nmapURL)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return "", err
+	}
+
+	cmd = exec.Command("tar", "-xzf", "nmap.tgz", "-C", binDir)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return "", err
+	}
+
+	cmd = exec.Command("rm", "nmap.tgz")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return "", err
+	}
+
+	cmd = exec.Command("chmod", "+x", nmapPath)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return "", err
+	}
+
+	return nmapPath, nil
 }
