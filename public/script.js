@@ -7,37 +7,51 @@ const socket = new WebSocket('ws://localhost:5234/ws');
 
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
-    const nmapScanData = data.data.nmap_scan_data
-    console.log(data)
+    const nmapScanData = data.data.nmap_scan_data;
+    console.log(data);
 
-    for (let i in nmapScanData){
-        const scanData = nmapScanData[i]
-        console.log(scanData)
-        let row = document.createElement("tr")
-        let numberCol = document.createElement("td")
-        let ipCol = document.createElement("td")
-        let macCol = document.createElement("td")
-        let deviceCol = document.createElement("td")
-
-        let detailsCol = document.createElement("td")
-        let detailsButton = document.createElement("button")
-        detailsButton.onclick = () => scanDetails.innerText = scanData.Details
-
-        numberCol.innerText = i
-        ipCol.innerText = scanData.IP
-        macCol.innerText = scanData.MACAddress
-        deviceCol.innerText = scanData.DeviceType
-        detailsCol.appendChild(detailsButton)
-
-        row.appendChild(numberCol)
-        row.appendChild(ipCol)
-        row.appendChild(macCol)
-        row.appendChild(deviceCol)
-        row.appendChild(detailsCol)
-
-        activeIpsTable.appendChild(row)
+    const table = document.getElementById('active-ips-table'); // Ensure you have an ID for your table element
+    while (table.rows.length > 1) { // Assuming the first row is the header
+        table.deleteRow(1);
     }
-    console.log("Data from server", data)
+
+    for (let i in nmapScanData) {
+        const scanData = nmapScanData[i];
+        console.log(scanData);
+
+        let row = document.createElement("tr");
+        row.classList.add("scan-table-item");
+
+        let numberCol = document.createElement("td");
+        let ipCol = document.createElement("td");
+        let macCol = document.createElement("td");
+        let deviceCol = document.createElement("td");
+
+        let detailsCol = document.createElement("td");
+        let detailsButton = document.createElement("button");
+        detailsButton.innerText = "Details"; // Add button text
+        detailsButton.onclick = () => {
+            const scanDetails = document.getElementById('scan-details'); // Ensure you have an ID for your details element
+            scanDetails.innerText = scanData.Details;
+        };
+
+        numberCol.innerText = parseInt(i) + 1;
+        ipCol.innerText = scanData.IP;
+        macCol.innerText = scanData.MACAddress;
+        deviceCol.innerText = scanData.DeviceType;
+        detailsCol.appendChild(detailsButton);
+
+        row.appendChild(numberCol);
+        row.appendChild(ipCol);
+        row.appendChild(macCol);
+        row.appendChild(deviceCol);
+        row.appendChild(detailsCol);
+
+        table.appendChild(row);
+    }
+
+    console.log("Data from server", data);
+    const statusElement = document.getElementById('statusElement'); // Ensure you have an ID for your status element
     statusElement.innerText = `Status: ${data.status}\nTime: ${data.time}`;
 };
 

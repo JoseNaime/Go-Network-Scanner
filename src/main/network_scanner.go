@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	if checkRootPermissions() {
+	if !checkRootPermissions() {
 		fmt.Println("Network scanner requires of root privileges. eg: sudo ./network-scanner -i <interface>")
 		return
 	}
@@ -38,7 +38,7 @@ func main() {
 	}
 
 	if err := os.Chmod(nmapPath, 0755); err != nil {
-		fmt.Println("Error setting executable permissions:", err)
+		fmt.Println("Error setting executable nmap permissions:", err)
 		return
 	}
 
