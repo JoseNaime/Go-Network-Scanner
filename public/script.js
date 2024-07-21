@@ -7,6 +7,10 @@ const socket = new WebSocket('ws://localhost:5234/ws');
 
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
+    const deviceData = {
+        ip_address: data.ip_address,
+        mac_address: data.mac_address
+    }
     const nmapScanData = data.data.nmap_scan_data;
     console.log(data);
 
@@ -35,11 +39,18 @@ socket.onmessage = function(event) {
             scanDetails.innerText = scanData.Details;
         };
 
+        if (scanData.IP === deviceData.ip_address){
+            scanData.MACAddress = deviceData.mac_address
+            scanData.DeviceType = "THIS DEVICE"
+        }
+
         numberCol.innerText = parseInt(i) + 1;
         ipCol.innerText = scanData.IP;
         macCol.innerText = scanData.MACAddress;
         deviceCol.innerText = scanData.DeviceType;
         detailsCol.appendChild(detailsButton);
+
+
 
         row.appendChild(numberCol);
         row.appendChild(ipCol);

@@ -5,21 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Network Scanner</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel='stylesheet' href='//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css'>
+    <link rel="stylesheet" href="./reset.css">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <h1>Network Scanner</h1>
-    <p id="status">Loading...</p>
-    <p id="scan-details"></p>
-    <table id="active-ips-table">
-        <tr>
-            <th>N.</th>
-            <th>Ip</th>
-            <th>MAC</th>
-            <th>Device</th>
-            <th>Details</th>
-        </tr>
-    </table>
-    <script src="/static/script.js"></script>
+<div class="body-wrapper">
+    <div class="wrapper">
+        <img id="title" src="static/svg/NScanner_title.svg" alt="NScanner title">
+        <div id="network-details">
+            <h2>Network Details</h2>
+            <div>
+                MAC Address   -
+                IP Address    -
+                Address Mask  -
+            </div>
+
+        </div>
+        <p id="status">Loading...</p>
+        <p id="scan-details"></p>
+        <table id="active-ips-table">
+            <tr>
+                <th>N.</th>
+                <th>Ip</th>
+                <th>MAC</th>
+                <th>Device</th>
+                <th>Details</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<script src="/static/script.js"></script>
 </body>
 </html>

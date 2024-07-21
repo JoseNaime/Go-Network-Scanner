@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os/exec"
+	"runtime"
 	"strings"
 	"sync"
 )
@@ -61,11 +62,26 @@ func GetInterfaceIPv4Addr(ifaceName string) (net.IP, *net.IPNet, error) {
 }
 
 func ping(ip string) bool {
-	out, err := exec.Command("ping", "-c", "1", "-W", "5", ip).Output()
+	var cmd *exec.Cmd
+
+	if runtime.GOOS == "windows" {
+		// For Windows
+		cmd = exec.Command("ping", "-n", "1", "-w", "5000", ip)
+	} else {
+		// For Unix-like systems
+		cmd = exec.Command("ping", "-c", "1", "-W", "5", ip)
+	}
+
+	out, err := cmd.Output()
 	if err != nil {
 		return false
 	}
-	return strings.Contains(string(out), "1 received")
+
+	output := string(out)
+	return strings.Contains(output, "1 packets received") ||
+		strings.Contains(output, "1 received") ||
+		strings.Contains(output, "Reply from") ||
+		strings.Contains(output, "1 packets transmitted, 1 packets received")
 }
 
 func inc(ip net.IP) {

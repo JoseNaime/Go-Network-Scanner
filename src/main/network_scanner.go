@@ -15,8 +15,6 @@ func main() {
 		return
 	}
 
-	binDir := "bin"
-
 	// Check if interface added
 	ifaceName := pflag.StringP("interface", "i", "wlan0", "Interface to use for scanning (eg. eth0, wlan0, en0, etc.)")
 	pflag.Parse()
@@ -25,14 +23,7 @@ func main() {
 	nmapPath, nmapFound := nmaputil.CheckNmap()
 
 	if !nmapFound {
-		fmt.Println("nmap not found on the system.")
-		var err error
-		nmapPath, err = nmaputil.DownloadNmap(binDir)
-		if err != nil {
-			fmt.Println("Error downloading nmap:", err)
-			return
-		}
-		fmt.Println("nmap downloaded and installed.")
+		fmt.Println("nmap not found on the system. Go to the official site https://nmap.org/download and follow instructions to install on your system\nUse  nmap -v  to verify if installed ")
 	} else {
 		fmt.Println("nmap is already installed on the system.")
 	}
