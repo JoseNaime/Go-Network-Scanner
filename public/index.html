@@ -13,12 +13,12 @@
 <div class="body-wrapper">
     <div class="wrapper">
         <img id="title" src="static/svg/NScanner_title.svg" alt="NScanner title">
-        <div id="network-details">
+        <div id="network-details-container">
             <h2>Network Details</h2>
-            <div>
-                MAC Address   -
-                IP Address    -
-                Address Mask  -
+            <div class="network-details">
+                <p>MAC Address:     <b id="mac-address-text"></b> </p>
+                <p>Address Mask:    <b id="mask-address-text"></b> </p>
+                <p>Your IP Address: <b id="ip-address-text"></b> </p>
             </div>
 
         </div>
@@ -35,6 +35,6 @@
         </table>
     </div>
 </div>
-<script src="/static/script.js"></script>
+<script src="./script.js"></script>
 </body>
 </html>

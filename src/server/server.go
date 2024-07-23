@@ -15,7 +15,7 @@ import (
 type ScanResult struct {
 	MacAddress   string                    `json:"mac_address"`
 	IPAddress    string                    `json:"ip_address"`
-	Mask         string                    `json:"mask"`
+	Mask         string                    `json:"mask_address"`
 	NmapScanData []nmaputil.NmapScanResult `json:"nmap_scan_data"`
 	Timestamp    time.Time                 `json:"timestamp"`
 }
@@ -27,7 +27,7 @@ var scanResult = ScanResult{}
 func StartServer(nmapPath string, ifaceName *string) {
 	app := fiber.New()
 
-	app.Static("/static", "./public")
+	app.Static("/", "./public")
 
 	app.Get("/ws", websocket.New(func(c *websocket.Conn) {
 		defer func() {
@@ -45,8 +45,8 @@ func StartServer(nmapPath string, ifaceName *string) {
 		}
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendFile("public/index.html")
+	app.Get("/*", func(c *fiber.Ctx) error {
+		return c.SendFile("./public/index.html")
 	})
 
 	app.Get("/stats", func(c *fiber.Ctx) error {

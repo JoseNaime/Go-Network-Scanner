@@ -8,10 +8,19 @@ const socket = new WebSocket('ws://localhost:5234/ws');
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
     const deviceData = {
-        ip_address: data.ip_address,
-        mac_address: data.mac_address
+        ip_address: data.data.ip_address,
+        mac_address: data.data.mac_address,
+        mask_address: data.data.mask_address
     }
+
+    document.getElementById("mac-address-text").innerText = deviceData.mac_address;
+    document.getElementById("ip-address-text").innerText = deviceData.ip_address;
+    document.getElementById("mask-address-text").innerText = deviceData.mask_address;
+
     const nmapScanData = data.data.nmap_scan_data;
+    nmapScanData.sort((a,b) => {
+        return parseInt(b.IP.split(".")[3]) - parseInt(a.IP.split(".")[3])
+    })
     console.log(data);
 
     const table = document.getElementById('active-ips-table'); // Ensure you have an ID for your table element
@@ -33,7 +42,7 @@ socket.onmessage = function(event) {
 
         let detailsCol = document.createElement("td");
         let detailsButton = document.createElement("button");
-        detailsButton.innerText = "Details"; // Add button text
+        detailsButton.innerText = "View";
         detailsButton.onclick = () => {
             const scanDetails = document.getElementById('scan-details'); // Ensure you have an ID for your details element
             scanDetails.innerText = scanData.Details;
@@ -49,8 +58,6 @@ socket.onmessage = function(event) {
         macCol.innerText = scanData.MACAddress;
         deviceCol.innerText = scanData.DeviceType;
         detailsCol.appendChild(detailsButton);
-
-
 
         row.appendChild(numberCol);
         row.appendChild(ipCol);
