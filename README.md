@@ -19,6 +19,8 @@ concurrent ping sweeps and `nmap`.
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [API Endpoints](#api-endpoints)
+- [Development Plan](#development-plan)
+  - [Future Enhancements](#future-enhancements)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -119,7 +121,44 @@ Serves the `index.html` file and all static files in the `public` directory.
 
 WebSocket endpoint for real-time communication.
 
+## Development Plan
+
+### Future Enhancements
+
+1. **AI Integration for Alerts**:
+    - Implement basic AI to monitor network traffic and detect suspicious connections.
+    - Send push notifications to email or phone numbers when suspicious activity is detected.
+
+2. **Customizable Scan Intervals**:
+    - Allow users to configure the scan interval through command-line flags.
+
+3. **Additional Nmap Flags**:
+    - Provide more customization options by supporting additional nmap flags.
+
+4. **Improved UI**:
+    - Enhance the user interface for better usability and visual appeal.
+
+5. **Cross-Platform Support**:
+    - Ensure compatibility and testing on Windows systems.
+
+6. **Logging and Reporting**:
+    - Add detailed logging and reporting features to keep track of scan results and alerts.
+
+7. **Containerization**:
+    - Create Docker images for easy deployment and management.
+
+8. **Performance Optimization**:
+    - Optimize the scanning process to handle large networks more efficiently.
+
+9. **Documentation**:
+    - Improve and expand documentation, including usage guides and API references.
+
 ## Contributing
+
+### Contribution Guidelines
+- **Ideas and Suggestions**: Open an issue to discuss new features or enhancements.
+- **Bug Reports**: Report bugs via the issue tracker, providing as much detail as possible.
+- **Code Contributions**: Fork the repository, create a new branch, make changes, and open a pull request.
 
 Contributions are welcome! Please follow these steps:
 
@@ -129,6 +168,7 @@ Contributions are welcome! Please follow these steps:
 4. Commit your changes: `git commit -m 'Add new feature'`.
 5. Push to the branch: `git push origin feature-name`.
 6. Open a pull request.
+7. 
 
 ## License
 
