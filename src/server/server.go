@@ -20,6 +20,12 @@ type ScanResult struct {
 	Timestamp    time.Time                 `json:"timestamp"`
 }
 
+type ServerScanResponse struct {
+	Status string      `json:"status"`
+	Time   interface{} `json:"time"`
+	Data   interface{} `json:"data"`
+}
+
 var clients = make(map[*websocket.Conn]bool)
 var broadcast = make(chan map[string]interface{})
 var scanResult = ScanResult{}
@@ -49,12 +55,33 @@ func StartServer(nmapPath string, ifaceName *string) {
 		return c.SendFile("./public/index.html")
 	})
 
+	app.Get("/stored", func(c *fiber.Ctx) error {
+		log.Println("Stored info requested")
+		res := ServerScanResponse{}
+
+		if scanResult.IPAddress == "" {
+			res = ServerScanResponse{
+				Status: "Scanning...",
+				Time:   time.Now(),
+				Data:   nil,
+			}
+		} else {
+			res = ServerScanResponse{
+				Status: "Stored",
+				Time:   scanResult.Timestamp,
+				Data:   scanResult,
+			}
+		}
+
+		return c.JSON(res)
+	})
+
 	go runNetworkScan(nmapPath, ifaceName)
 	go handleMessages()
 
-	err := app.Listen(":5234")
-	if err == nil {
-		return
+	err := app.Listen("0.0.0.0:5234")
+	if err != nil {
+		log.Fatalf("Error starting server: %v", err)
 	}
 }
 
@@ -97,7 +124,7 @@ func runNetworkScan(nmapPath string, ifaceName *string) {
 		}
 
 		// Delay between scans
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Minute)
 	}
 }
 

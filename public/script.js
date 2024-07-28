@@ -6,12 +6,30 @@ const maskAddressElement = document.getElementById("mask-address-text");
 // WebSocket connection
 const socket = new WebSocket('ws://localhost:5234/ws');
 
+
+window.onload = function(){
+    console.log("Site loaded")
+    getStoredScan()
+}
+
 socket.onmessage = function(event) {
     const jsonData = JSON.parse(event.data);
     generateASCIITable(jsonData)
 
     console.log("Data from server", jsonData);
 };
+
+async function getStoredScan() {
+    const storedData = await fetch("/stored").then(data => data.json())
+    console.log("stored Data: ", storedData)
+
+    if (storedData.mac_address === "") {
+        console.log("Trying to get stored data...")
+        setTimeout(getStoredScan, 3000)
+    } else {
+        generateASCIITable(storedData)
+    }
+}
 
 function formatDate(dateStr){
     const date = new Date(dateStr);
