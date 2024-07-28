@@ -153,6 +153,9 @@ WebSocket endpoint for real-time communication.
 9. **Documentation**:
     - Improve and expand documentation, including usage guides and API references.
 
+10. **Web Authentication**:
+    - Authentication will be added to access information through the website.
+
 ## Contributing
 
 ### Contribution Guidelines
