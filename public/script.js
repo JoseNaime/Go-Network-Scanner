@@ -1,6 +1,7 @@
-const statusElement = document.getElementById('status');
-const activeIpsTable = document.getElementById('active-ips-table')
-const scanDetails = document.getElementById("scan-details")
+const detailsElement = document.getElementById('scan-details');
+const macAddressElement = document.getElementById("mac-address-text");
+const ipAddressElement = document.getElementById("ip-address-text");
+const maskAddressElement = document.getElementById("mask-address-text");
 
 // WebSocket connection
 const socket = new WebSocket('ws://localhost:5234/ws');
@@ -13,64 +14,87 @@ socket.onmessage = function(event) {
         mask_address: data.data.mask_address
     }
 
-    document.getElementById("mac-address-text").innerText = deviceData.mac_address;
-    document.getElementById("ip-address-text").innerText = deviceData.ip_address;
-    document.getElementById("mask-address-text").innerText = deviceData.mask_address;
+    macAddressElement.innerText = deviceData.mac_address;
+    ipAddressElement.innerText = deviceData.ip_address;
+    maskAddressElement.innerText = deviceData.mask_address;
 
     const nmapScanData = data.data.nmap_scan_data;
-    nmapScanData.sort((a,b) => {
+
+    nmapScanData.sort((a,b) => { // Sort ips by last digit
         return parseInt(b.IP.split(".")[3]) - parseInt(a.IP.split(".")[3])
     })
-    console.log(data);
 
-    const table = document.getElementById('active-ips-table'); // Ensure you have an ID for your table element
-    while (table.rows.length > 1) { // Assuming the first row is the header
-        table.deleteRow(1);
-    }
+    function createTable(nmapScanData) {
+        // Calculate the maximum width for each column
+        const headers = ['N', 'Ip', 'MAC', 'Device', 'Details'];
+        const footer = ["", data.status, formatDate(data.time), "" , ""]
+        const maxLengths = headers.map((header, i) => Math.max(footer[i].length, header.length));
+        console.log(maxLengths)
 
-    for (let i in nmapScanData) {
-        const scanData = nmapScanData[i];
-        console.log(scanData);
+        nmapScanData.forEach((row, index) => {
+            console.log(row.MACAddress, row.DeviceType)
+            if (row.MACAddress === "") row.MACAddress = deviceData.mac_address;
+            if (row.DeviceType === "") row.DeviceType = "This Device";
 
-        let row = document.createElement("tr");
-        row.classList.add("scan-table-item");
+            const values = [String(index + 1),
+                row.IP,
+                row.MACAddress,
+                row.DeviceType,
+                'Button'];
+            values.forEach((value, i) => {
+                maxLengths[i] = Math.max(maxLengths[i], value.length);
+            });
+        });
 
-        let numberCol = document.createElement("td");
-        let ipCol = document.createElement("td");
-        let macCol = document.createElement("td");
-        let deviceCol = document.createElement("td");
-
-        let detailsCol = document.createElement("td");
-        let detailsButton = document.createElement("button");
-        detailsButton.innerText = "View";
-        detailsButton.onclick = () => {
-            const scanDetails = document.getElementById('scan-details'); // Ensure you have an ID for your details element
-            scanDetails.innerText = scanData.Details;
+        const createSeparator = () => {
+            return '+-' + maxLengths.map(len => '-'.repeat(len)).join('-+-') + '-+';
         };
 
-        if (scanData.IP === deviceData.ip_address){
-            scanData.MACAddress = deviceData.mac_address
-            scanData.DeviceType = "THIS DEVICE"
-        }
+        const createRow = (values, isHeader = false, isFooter = false, index = null) => {
+            const cells = values.map((value, i) => value.padEnd(maxLengths[i]));
+            if (isHeader) {
+                return `<span class="header">| ${cells.join(' | ')} |</span>`;
+            } else if (isFooter){
+                return `<span class="header">| ${cells.join('   ')} |</span>`;
+            }
+            const rowHTML = cells.map((cell, i) => {
+                if (i === cells.length - 1) {
+                    return `<button class="details-button" data-index="${index}">Details</button>`.padEnd(maxLengths[i]);
+                }
+                return cell;
+            });
+            return `<span class="cell">| ${rowHTML.join(' | ')} |</span>`;
+        };
 
-        numberCol.innerText = parseInt(i) + 1;
-        ipCol.innerText = scanData.IP;
-        macCol.innerText = scanData.MACAddress;
-        deviceCol.innerText = scanData.DeviceType;
-        detailsCol.appendChild(detailsButton);
+        // Build the table
+        let table = `<span class="border">${createSeparator()}</span>\n`;
+        table += createRow(headers, true) + '\n';
+        table += `<span class="border">${createSeparator()}</span>\n`;
 
-        row.appendChild(numberCol);
-        row.appendChild(ipCol);
-        row.appendChild(macCol);
-        row.appendChild(deviceCol);
-        row.appendChild(detailsCol);
+        nmapScanData.forEach((row, index) => {
+            const values = [String(index + 1), row.IP, row.MACAddress, row.DeviceType, 'Details'];
+            table += createRow(values, false, false, index) + '\n';
+        });
 
-        table.appendChild(row);
+        table += `<span class="border">${createSeparator()}</span>\n`;
+        table += createRow(footer, false, true) + '\n';
+        table += `<span class="border">${createSeparator()}</span>`;
+        return table;
     }
 
+    // Generate the table and insert into the HTML
+    document.getElementById('asciiTable').innerHTML = createTable(nmapScanData);
+
+    // Add event listeners to the buttons
+    document.querySelectorAll('.details-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const index = this.getAttribute('data-index');
+            const rowData = nmapScanData[index];
+            detailsElement.innerText =  rowData.Details;
+        })}
+    )
+
     console.log("Data from server", data);
-    const statusElement = document.getElementById('statusElement'); // Ensure you have an ID for your status element
-    statusElement.innerText = `Status: ${data.status}\nTime: ${data.time}`;
 };
 
 // Fetch initial stats
@@ -79,3 +103,19 @@ fetch('/stats')
     .then(data => {
         statusElement.innerText = `Status: ${data.status}\nTime: ${data.time}`;
     });
+
+function formatDate(dateStr){
+    const date = new Date(dateStr);
+
+    const pad = (num) => num.toString().padStart(2, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1); // Months are zero-based
+    const day = pad(date.getDate());
+
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}

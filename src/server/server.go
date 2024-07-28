@@ -87,13 +87,6 @@ func runNetworkScan(nmapPath string, ifaceName *string) {
 
 		scanData := nmaputil.ScanIpsWithNmap(activeIps, nmapPath)
 
-		// Print the scan results
-		for _, result := range scanData {
-			fmt.Printf("IP: %s\nMAC:%s\nDevice Type:%s\n", result.IP, result.MACAddress, result.DeviceType)
-		}
-
-		fmt.Printf("Finished scanning IPs")
-
 		scanResult = ScanResult{
 			MacAddress:   iface.HardwareAddr.String(),
 			IPAddress:    ip.String(),
@@ -111,7 +104,6 @@ func runNetworkScan(nmapPath string, ifaceName *string) {
 		// Delay between scans
 		time.Sleep(10 * time.Second)
 	}
-
 }
 
 func handleMessages() {

@@ -14,9 +14,9 @@ import (
 
 type NmapScanResult struct {
 	IP         net.IP
-	Details    string
 	MACAddress string
 	DeviceType string
+	Details    string
 }
 
 func ScanIpsWithNmap(ips []net.IP, nmapPath string) []NmapScanResult {

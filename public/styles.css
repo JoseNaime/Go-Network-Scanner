@@ -1,89 +1,105 @@
 :root {
-	--color-black: #1a1a1a;
-	--color-red: #f4005f;
-	--color-green: #98e024;
-	--color-yellow: #fd971f;
-	--color-blue: #9d65ff;
-	--color-purple: #f4005f;
-	--color-cyan: #58d1eb;
-	--color-white: #c4c5b5;
-	--color-bright-black: #625e4c;
-	--color-bright-red: #f4005f;
-	--color-bright-green: #98e024;
-	--color-bright-yellow: #e0d561;
-	--color-bright-blue: #9d65ff;
-	--color-bright-purple: #f4005f;
-	--color-bright-cyan: #58d1eb;
-	--color-bright-white: #f6f6ef;
-	--color-background: #0c0c0c;
-	--color-foreground: #d9d9d9;
-	--color-selection-background: #343434;
-	--color-cursor: #fc971f;
+	--color-black                : #1A1A1A;
+	--color-red                  : #F4005F;
+	--color-green                : #98E024;
+	--color-yellow               : #FD971F;
+	--color-blue                 : #9D65FF;
+	--color-purple               : #F4005F;
+	--color-cyan                 : #58D1EB;
+	--color-white                : #C4C5B5;
+	--color-bright-black         : #625E4C;
+	--color-bright-red           : #F4005F;
+	--color-bright-green         : #98E024;
+	--color-bright-yellow        : #E0D561;
+	--color-bright-blue          : #9D65FF;
+	--color-bright-purple        : #F4005F;
+	--color-bright-cyan          : #58D1EB;
+	--color-bright-white         : #F6F6EF;
+	--color-background           : #0C0C0C;
+	--color-foreground           : #D9D9D9;
+	--color-selection-background : #343434;
+	--color-cursor               : #FC971F;
 	
-	--spacing: 16px; /* You can adjust this value as needed */
-	--max-width: 1200px; /* Maximum width of the wrapper */
+	--spacing                    : 16px; /* You can adjust this value as needed */
+	--max-width                  : 1200px; /* Maximum width of the wrapper */
 }
 
 html, body {
-	font-family: Hack, monospace;
+	font-family : Hack, monospace;
 }
 
 body {
-	background-color: var(--color-background);
-	color: var(--color-foreground);
+	background-color : var(--color-background);
+	color            : var(--color-foreground);
 }
 
 a {
-	color: var(--color-blue);
+	color : var(--color-blue);
 }
 
 h2 {
-	color: var(--color-black);
-	background: var(--color-blue);
-	width: fit-content;
-	padding: 4px;
+	color      : var(--color-black);
+	background : var(--color-blue);
+	width      : fit-content;
+	padding    : 4px;
 }
+
+th, td {
+	padding-top    : 4px;
+	padding-bottom : 4px;
+}
+
 .body-wrapper {
-	display: flex;
-	margin: 0 auto;
-	min-height: 100vh;
-	padding: 0 var(--spacing);
-	box-sizing: border-box;
+	display    : flex;
+	margin     : 0 auto;
+	min-height : 100vh;
+	padding    : 0 var(--spacing);
+	box-sizing : border-box;
 }
 
 /* Standard wrapper class */
 .wrapper {
-	padding: var(--spacing);
-	max-width: var(--max-width);
-	margin: 0 auto;
-	width: 100%;
-	box-sizing: border-box;
-	background-color: var(--color-background); /* Optional: Add background color for visibility */
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for aesthetics */
+	padding          : var(--spacing);
+	max-width        : var(--max-width);
+	margin           : 0 auto;
+	width            : 100%;
+	box-sizing       : border-box;
+	background-color : var(--color-background); /* Optional: Add background color for visibility */
+	box-shadow       : 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for aesthetics */
 }
 
-#title{
-	display: block;
-	margin: 30px auto;
+button {
+	background: var(--color-red);
 }
 
-.network-details{
-	padding: 10px 50px;
+#title {
+	display : block;
+	margin  : 30px auto;
+}
+
+#active-ips-table, #asciiTable{
+	margin     : auto;
+	text-align: center;
+	width      : 800px;
+}
+
+.network-details {
+	padding : 10px 50px;
 }
 
 .network-details p {
-	margin: 5px 0;
+	margin : 5px 0;
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width : 768px) {
 	:root {
-		--spacing: 12px; /* Adjust spacing for smaller screens */
+		--spacing : 12px; /* Adjust spacing for smaller screens */
 	}
 }
 
-@media (max-width: 480px) {
+@media (max-width : 480px) {
 	:root {
-		--spacing: 8px; /* Adjust spacing for very small screens */
+		--spacing : 8px; /* Adjust spacing for very small screens */
 	}
 }
