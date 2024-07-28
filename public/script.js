@@ -7,7 +7,29 @@ const maskAddressElement = document.getElementById("mask-address-text");
 const socket = new WebSocket('ws://localhost:5234/ws');
 
 socket.onmessage = function(event) {
-    const data = JSON.parse(event.data);
+    const jsonData = JSON.parse(event.data);
+    generateASCIITable(jsonData)
+
+    console.log("Data from server", jsonData);
+};
+
+function formatDate(dateStr){
+    const date = new Date(dateStr);
+
+    const pad = (num) => num.toString().padStart(2, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1); // Months are zero-based
+    const day = pad(date.getDate());
+
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+function generateASCIITable(data){
     const deviceData = {
         ip_address: data.data.ip_address,
         mac_address: data.data.mac_address,
@@ -94,28 +116,4 @@ socket.onmessage = function(event) {
         })}
     )
 
-    console.log("Data from server", data);
-};
-
-// Fetch initial stats
-fetch('/stats')
-    .then(response => response.json())
-    .then(data => {
-        statusElement.innerText = `Status: ${data.status}\nTime: ${data.time}`;
-    });
-
-function formatDate(dateStr){
-    const date = new Date(dateStr);
-
-    const pad = (num) => num.toString().padStart(2, '0');
-
-    const year = date.getFullYear();
-    const month = pad(date.getMonth() + 1); // Months are zero-based
-    const day = pad(date.getDate());
-
-    const hours = pad(date.getHours());
-    const minutes = pad(date.getMinutes());
-    const seconds = pad(date.getSeconds());
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
