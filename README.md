@@ -21,6 +21,7 @@ concurrent ping sweeps and `nmap`.
 - [API Endpoints](#api-endpoints)
 - [Development Plan](#development-plan)
   - [Future Enhancements](#future-enhancements)
+  - [Changelog](#changelog)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -155,6 +156,10 @@ WebSocket endpoint for real-time communication.
 
 10. **Web Authentication**:
     - Authentication will be added to access information through the website.
+
+### Changelog
+
+All notable changes to this project are documented in the [CHANGELOG.md](./CHANGELOG.md) file.
 
 ## Contributing
 
